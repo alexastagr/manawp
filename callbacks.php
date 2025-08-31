@@ -66,7 +66,6 @@ function wordpress_posts(): WP_HTTP_Response
 
 
 
-
 /**
  *   Delete selected POST via ID
  *    passed as parameter
@@ -100,4 +99,35 @@ function wordpress_delete_post(WP_REST_Request $request)
         'deleted' => true,
         'post_id' => $post_id,
     ]);
+}
+
+
+/**
+ *   Return List of WordPress Plugins
+ *     Active and Inactive
+ */
+function wordpress_get_plugins(): WP_REST_Response
+{
+    if (! function_exists('get_plugins')) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
+    $all = get_plugins();
+    $act = get_option('active_plugins', []);
+
+
+    $plugins = [];
+
+    foreach ($all as $plugin_file => $plugin_data) {
+        $is_active = in_array($plugin_file, $act, true);
+
+        $plugins[] = [
+            'author'  => $plugin_data['Author'],
+            'name'    => $plugin_data['Name'],
+            'version' => $plugin_data['Version'],
+            'status'  => $is_active ? 'active' : 'inactive',
+        ];
+    }
+
+    return rest_ensure_response($plugins);
 }

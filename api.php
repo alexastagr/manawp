@@ -62,7 +62,7 @@ add_action('rest_api_init', function () {
     // get all plugins
     register_rest_route('manawp/v1', '/plugins', [
         'methods' => 'GET',
-        'callback' => 'manawp_get_plugins',
+        'callback' => 'wordpress_get_plugins',
         'permission_callback' => 'verify_token',
     ]);
 
