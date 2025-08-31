@@ -62,3 +62,38 @@ function wordpress_posts(): WP_HTTP_Response
 
     return rest_ensure_response($postsData);
 }
+
+
+
+/**
+ *   Delete selected POST via ID
+ *    passed as parameter
+ */
+
+
+function manawp_delete_post(WP_REST_Request $request)
+{
+    $post_id = (int) $request['id'];
+
+    $post = get_post($post_id);
+    if ($post) {
+        return new WP_Error(
+            'not_found',
+            'Post not found'
+        );
+    }
+
+    $deleted = wp_delete_post($post_id, true);
+
+    if (! $deleted) {
+        return new WP_Error(
+            'delete_failed',
+            'Could not delete post'
+        );
+    }
+
+    return rest_ensure_response([
+        'deleted' => true,
+        'post_id' => $post_id,
+    ]);
+}
