@@ -26,9 +26,9 @@ add_action('admin_init', function () {
 });
 
 
-
-
-
+/**
+ *  Load Settings Page
+ */
 function admin_settings_page()
 {
     include plugin_dir_path(__FILE__) . 'views/settings.php';
@@ -50,8 +50,6 @@ add_action('template_redirect', function () {
         }
     }
 });
-
-
 
 
 function wp_maintenance_mode()

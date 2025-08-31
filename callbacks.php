@@ -65,21 +65,24 @@ function wordpress_posts(): WP_HTTP_Response
 
 
 
+
+
 /**
  *   Delete selected POST via ID
  *    passed as parameter
  */
 
 
-function manawp_delete_post(WP_REST_Request $request)
+function wordpress_delete_post(WP_REST_Request $request)
 {
     $post_id = (int) $request['id'];
 
     $post = get_post($post_id);
-    if ($post) {
+    if (! $post) {
         return new WP_Error(
             'not_found',
-            'Post not found'
+            'Post not found',
+            ['status' => 404]
         );
     }
 
@@ -88,7 +91,8 @@ function manawp_delete_post(WP_REST_Request $request)
     if (! $deleted) {
         return new WP_Error(
             'delete_failed',
-            'Could not delete post'
+            'Could not delete post',
+            ['status' => 500]
         );
     }
 

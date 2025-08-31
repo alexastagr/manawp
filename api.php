@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . 'methods.php';
+require_once plugin_dir_path(__FILE__) . 'callbacks.php';
 
 function verify_token($request)
 {
@@ -16,7 +16,7 @@ add_action('rest_api_init', function () {
     // validate connection
     register_rest_route('manawp/v1', '/validate', [
         'methods' => 'POST',
-        'callback' => 'manawp_validate',
+        'callback' => 'manawp_validated',
         'permission_callback' => 'verify_token',
     ]);
 
@@ -32,14 +32,14 @@ add_action('rest_api_init', function () {
     // get a list of posts
     register_rest_route('manawp/v1', '/posts', [
         'methods' => 'GET',
-        'callback' => 'manawp_getposts',
+        'callback' => 'wordpress_posts',
         'permission_callback' => 'verify_token',
     ]);
 
     // delete a post
     register_rest_route('manawp/v1', '/post/(?P<id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'manawp_delete_post',
+        'callback' => 'wordpress_delete_post',
         'permission_callback' => 'verify_token',
     ]);
 
