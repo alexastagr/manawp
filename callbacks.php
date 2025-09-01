@@ -34,14 +34,11 @@ function wordpress_details(): WP_HTTP_Response
 
 
     return rest_ensure_response([
-
         'host' => site_url(),
         'name' => get_bloginfo('name'),
         'tag' => get_bloginfo('description'),
         'wps' => $wp_version, // wordpress version
         'php' => phpversion(), // php version
-
-
     ]);
 }
 
@@ -106,9 +103,60 @@ function wordpress_delete_post(WP_REST_Request $request)
 
     return rest_ensure_response([
         'deleted' => true,
+        'message' => "The post with {$post_id} was deleted",
         'post_id' => $post_id,
     ]);
 }
+
+
+/**
+ *   Find single POST by ID
+ */
+
+function wordpress_single_post(WP_REST_Request $request)
+{
+
+    $post_id = (int) $request['id'];
+
+    $post = get_post($post_id);
+
+    if (! $post) {
+        return new WP_Error(
+            'not_found',
+            'Post not found',
+            ['status' => 404]
+        );
+    }
+
+    // return single post object
+    return rest_ensure_response([
+        'found' => true,
+        'status' => $post->post_status,
+        'post' => [
+            'id' => $post->ID,
+            'title' => $post->post_title,
+            'comments' => $post->comment_count,
+            'dates' => [
+                'published' => $post->post_date,
+                'modified'  => $post->post_modified,
+            ]
+        ]
+
+    ]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
