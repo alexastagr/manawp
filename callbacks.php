@@ -26,13 +26,22 @@ function manawp_validated()
  *     as Response
  */
 
-function wordpress_version(): WP_HTTP_Response
+function wordpress_details(): WP_HTTP_Response
 {
 
     global $wp_version;
+    global $wpdb;
+
 
     return rest_ensure_response([
-        'version' => $wp_version
+
+        'host' => site_url(),
+        'name' => get_bloginfo('name'),
+        'tag' => get_bloginfo('description'),
+        'wps' => $wp_version, // wordpress version
+        'php' => phpversion(), // php version
+
+
     ]);
 }
 
