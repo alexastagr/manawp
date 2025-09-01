@@ -66,7 +66,10 @@ function wordpress_posts(): WP_HTTP_Response
         ];
     }
 
-    return rest_ensure_response($postsData);
+    return rest_ensure_response([
+        'found' => count($postsData),
+        'posts' => $postsData
+    ]);
 }
 
 
@@ -147,18 +150,6 @@ function wordpress_single_post(WP_REST_Request $request)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  *   Return List of WordPress Plugins
  *     Active and Inactive
@@ -186,5 +177,35 @@ function wordpress_get_plugins(): WP_REST_Response
         ];
     }
 
-    return rest_ensure_response($plugins);
+    return rest_ensure_response([
+        'found' => count($plugins),
+        'plugins' => $plugins
+    ]);
+}
+
+
+/**
+ *   Return List of WordPress Themes
+ *     Current and Inactive
+ */
+
+function wordpress_get_themes(): WP_REST_Response
+{
+    $themes = wp_get_themes();
+    $data = [];
+
+    foreach ($themes as $slug => $theme) {
+        $data[] = [
+            'slug'    => $slug,
+            'name'    => $theme->get('Name'),
+            'version' => $theme->get('Version'),
+            'author'  => $theme->get('Author'),
+
+        ];
+    }
+
+    return rest_ensure_response([
+        'found' =>  count($data),
+        'themes' => $data
+    ]);
 }
