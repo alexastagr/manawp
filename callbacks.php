@@ -209,3 +209,23 @@ function wordpress_get_themes(): WP_REST_Response
         'themes' => $data
     ]);
 }
+
+
+
+function wordpress_get_users($request)
+{
+    $users = get_users();
+    $data = [];
+
+    foreach ($users as $user) {
+        $data[] = [
+            'ID'       => $user->ID,
+            'username' => $user->user_login,
+            'email'    => $user->user_email,
+            'name'     => $user->display_name,
+            'role'     => $user->roles,
+        ];
+    }
+
+    return rest_ensure_response($data);
+}

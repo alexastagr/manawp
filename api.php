@@ -78,7 +78,15 @@ add_action('rest_api_init', function () {
     // get all themes
     register_rest_route('manawp/v1', '/themes', [
         'methods' => 'GET',
-        'callback' => 'manawp_get_themes',
+        'callback' => 'wordpress_get_themes',
+        'permission_callback' => 'verify_token',
+    ]);
+
+
+    // get all users
+    register_rest_route('manawp/v1', '/users', [
+        'methods' => 'GET',
+        'callback' => 'wordpress_get_users',
         'permission_callback' => 'verify_token',
     ]);
 });
